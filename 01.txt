@@ -1,0 +1,41 @@
+def stu_input():
+    # 读取in.txt文件中的数据
+    student_data = []
+    with open("in.txt", "r") as file:
+        for line in file:
+            line = line.strip()
+            if line:
+                data = line.split(" ")
+                student_data.append(data)
+    return student_data
+
+
+def total_score(student_data):
+    # 计算每个学生的总分
+    total_scores = []
+    for data in student_data:
+        scores = [int(score) if score else 0 for score in data[1:]]  # 添加错误处理，空字符串转换为0
+        total = sum(scores)
+        total_scores.append((data[0], total))
+    return total_scores
+
+
+def score_rank(total_scores):
+    # 计算每个学生的总分排名
+    sorted_scores = sorted(total_scores, key=lambda x: x[1], reverse=True)
+    rank_scores = [(student[0], rank + 1) for rank, student in enumerate(sorted_scores)]
+    return rank_scores
+
+
+def stu_output(rank_scores):
+    # 将计算结果写入out.txt文件
+    with open("out.txt", "w") as file:
+        for student in rank_scores:
+            file.write(f"{student[0]},{student[1]}\n")
+
+
+# 调用函数进行处理
+student_data = stu_input()
+total_scores = total_score(student_data)
+rank_scores = score_rank(total_scores)
+stu_output(rank_scores)
